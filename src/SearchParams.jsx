@@ -1,53 +1,55 @@
 import React, { useState } from "react";
 import { Form, FormGroup, TextInput, Button } from "carbon-components-react";
-import axios from "axios";
-import WeatherCard from "./WeatherCard";
+import WeatherUI from "./Weather";
 
 const LocationSearch = () => {
+  const [locationQuery, updateLocationQuery] = useState("");
   const [location, updateLocation] = useState("");
-  const [weather_data, updateWeatherData] = useState({
-    temp: 0,
-    state_code: "",
-    country_code: "",
-    uv: 0,
-    weather: { description: "" },
-  });
-
-  function requestLocationData(location) {
-    const apiStr = "http://localhost:5000/weather?location=" + location;
-    axios
-      .get(apiStr)
-      .then((response) => {
-        console.log(response);
-        updateWeatherData(response.data.response.data[0]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const [didSubmit, updateDidSubmit] = useState(false);
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      updateLocation(pos.coords.latitude + " " + pos.coords.longitude);
+    });
   }
-
   return (
-    <div className="search">
+    <div className="bx--grid">
       <Form
         onSubmit={(e) => {
           e.preventDefault();
-          requestLocationData(location);
+          updateDidSubmit(true);
+          updateLocationQuery(location);
         }}
+        className="bx--row"
       >
-        <FormGroup legendText="" message={false} messageText="" invalid={false}>
-          <TextInput
-            id="location"
-            invalidText="Invalid location provided"
-            labelText="Location"
-            placeholder="Toronto, ON"
-            onChange={(e) => updateLocation(e.target.value)}
-          />
-        </FormGroup>
-        <Button kind="primary" tabIndex={0} type="submit">
-          Update Weather
-        </Button>
+        <div className="bx--col">
+          <FormGroup
+            legendText=""
+            message={false}
+            messageText=""
+            invalid={false}
+          >
+            <TextInput
+              id="location"
+              invalidText="Invalid location provided"
+              labelText="Location"
+              placeholder="Toronto, ON"
+              value={location}
+              onChange={(e) => {
+                updateDidSubmit(false);
+                updateLocation(e.target.value);
+              }}
+            />
+          </FormGroup>
+        </div>
+        <div className="bx--col">
+          <Button kind="primary" id="update" tabIndex={0} type="submit">
+            Update Weather
+          </Button>
+        </div>
       </Form>
-      <WeatherCard data={weather_data} />
+      <div className="bx--row">
+        <WeatherUI location={locationQuery} didSubmit={didSubmit} />
+      </div>
     </div>
   );
 };

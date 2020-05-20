@@ -1,18 +1,20 @@
 import React from "react";
 import { render } from "react-dom";
-import WeatherUI from "./Weather";
 import "./css/carbon.scss";
-import NavBar from "./NavBar";
+import { Header, HeaderName, Content } from "carbon-components-react";
+import LocationSearch from "./SearchParams";
 
 const App = () => {
   return (
-    <div>
-      <header>
-        <NavBar />
-      </header>
-      <div id="container">
-        <WeatherUI />
-      </div>
+    <div className="container">
+      <Header aria-label="Name">
+        <HeaderName href="#" prefix="Carbon">
+          Weather
+        </HeaderName>
+      </Header>
+      <Content>
+        <LocationSearch />
+      </Content>
     </div>
   );
 };

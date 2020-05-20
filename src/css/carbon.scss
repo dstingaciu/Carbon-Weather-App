@@ -1,15 +1,16 @@
 @import "@carbon/themes/scss/themes";
 // Use the gray 90 theme
+$feature-flags: (
+  grid-columns-16: true,
+);
+
 $carbon--theme: $carbon--theme--g90;
 @include carbon--theme();
 
 @import "carbon-components/scss/globals/scss/styles.scss";
 @import "@carbon/colors/scss/colors";
+@import "carbon-components/scss/globals/grid/_grid.scss";
 
-body {
-  background-color: $carbon--cool-gray-90;
-}
-
-header {
-  text-align: center;
+#update {
+  margin-top: 2em;
 }
